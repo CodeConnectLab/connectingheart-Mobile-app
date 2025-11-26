@@ -141,41 +141,42 @@ export const DashboardScreen: React.FC = () => {
         end={{ x: 1, y: 0 }}
         style={styles.profileCard}
       >
-        <View style={styles.profileContent}>
-          <View style={styles.profileLeft}>
-            <View style={styles.profileImageContainer}>
-              <Image
-                source={{ uri: 'https://backend.prod.connectingheart.co/api/profile/file/65eaccb3c70ef94111173de2/1756985740464' }}
-                style={styles.profileImage}
-              />
-              <View style={styles.onlineIndicator} />
-            </View>
-            <View>
-              <Text style={styles.profileLabel}>YOUR PROFILE</Text>
-              <Text style={styles.profileName}>Aman Chitrey</Text>
-              <Text style={styles.profileCompletion}>Profile completion 100%</Text>
-            </View>
+        {/* YOUR PROFILE Section */}
+        <View style={styles.profileSection}>
+          <View style={styles.profileImageContainer}>
+            <Image
+              source={{ uri: 'https://backend.prod.connectingheart.co/api/profile/file/65eaccb3c70ef94111173de2/1756985740464' }}
+              style={styles.profileImage}
+            />
+            <View style={styles.onlineIndicator} />
           </View>
-
-          <View style={styles.profileCenter}>
-            <Text style={styles.profileLabel}>ACTIVATE YOUR PLAN</Text>
-            <View style={styles.upgradeBox}>
-              <Text style={styles.upgradeText}>Upgrade for premium features</Text>
-            </View>
+          <View style={styles.profileInfo}>
+            <Text style={styles.profileLabel}>YOUR PROFILE</Text>
+            <Text style={styles.profileName}>Aman Chitrey</Text>
+            <Text style={styles.profileCompletion}>Profile completion 100%</Text>
           </View>
+        </View>
 
-          <View style={styles.profileRight}>
-            <View style={styles.lookingForContent}>
-              <Text style={styles.profileLabel}>LOOKING FOR</Text>
-              <Text style={styles.profileName}>Life Partner</Text>
-              <Text style={styles.profileCompletion}>Preferences saved</Text>
+        {/* ACTIVATE YOUR PLAN Section */}
+        <View style={styles.activateSection}>
+          <Text style={styles.profileLabel}>ACTIVATE YOUR PLAN</Text>
+          <TouchableOpacity style={styles.upgradeBox} activeOpacity={0.8}>
+            <Text style={styles.upgradeText}>Upgrade for premium features</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* LOOKING FOR Section */}
+        <View style={styles.lookingForSection}>
+          <View style={styles.lookingForInfo}>
+            <Text style={styles.profileLabel}>LOOKING FOR</Text>
+            <Text style={styles.profileName}>Life Partner</Text>
+            <Text style={styles.profileCompletion}>Preferences saved</Text>
+          </View>
+          <View style={styles.profileIconContainer}>
+            <View style={styles.profileIconCircle}>
+              <Ionicons name="person-outline" size={40} color="rgba(255,255,255,0.7)" />
             </View>
-            <View style={styles.profileIconContainer}>
-              <View style={styles.profileIconCircle}>
-                <Ionicons name="person-outline" size={40} color="rgba(255,255,255,0.7)" />
-              </View>
-              <View style={[styles.onlineIndicator, { backgroundColor: '#3b82f6' }]} />
-            </View>
+            <View style={[styles.onlineIndicator, { backgroundColor: '#3b82f6' }]} />
           </View>
         </View>
       </LinearGradient>
@@ -229,27 +230,21 @@ const styles = StyleSheet.create({
   profileCard: {
     margin: 16,
     borderRadius: 24,
-    padding: 24,
+    padding: 20,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.3,
     shadowRadius: 16,
     elevation: 8,
   },
-  profileContent: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    gap: 16,
-  },
-  profileLeft: {
+  profileSection: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 16,
-    flex: 1,
+    marginBottom: 20,
   },
   profileImageContainer: {
     position: 'relative',
+    marginRight: 16,
   },
   profileImage: {
     width: 80,
@@ -260,56 +255,64 @@ const styles = StyleSheet.create({
   },
   onlineIndicator: {
     position: 'absolute',
-    bottom: -4,
-    right: -4,
+    bottom: -2,
+    right: -2,
     width: 24,
     height: 24,
     borderRadius: 12,
     backgroundColor: '#10b981',
-    borderWidth: 2,
+    borderWidth: 3,
     borderColor: 'white',
+  },
+  profileInfo: {
+    flex: 1,
   },
   profileLabel: {
     fontSize: 10,
-    letterSpacing: 3,
-    color: 'rgba(255,255,255,0.8)',
-    marginBottom: 4,
+    letterSpacing: 2,
+    color: 'rgba(255,255,255,0.85)',
+    marginBottom: 6,
+    fontWeight: '500',
   },
   profileName: {
-    fontSize: 24,
-    fontWeight: '600',
+    fontSize: 22,
+    fontWeight: '700',
     color: 'white',
     marginBottom: 4,
   },
   profileCompletion: {
-    fontSize: 14,
-    color: 'rgba(255,255,255,0.7)',
+    fontSize: 13,
+    color: 'rgba(255,255,255,0.75)',
   },
-  profileCenter: {
+  activateSection: {
     alignItems: 'center',
-    flex: 1,
+    paddingVertical: 8,
+    marginBottom: 20,
   },
   upgradeBox: {
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderRadius: 16,
+    backgroundColor: 'rgba(255,255,255,0.25)',
+    paddingHorizontal: 32,
+    paddingVertical: 14,
+    borderRadius: 20,
     marginTop: 12,
+    width: '100%',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.3)',
   },
   upgradeText: {
     color: 'white',
-    fontSize: 12,
+    fontSize: 14,
     textAlign: 'center',
+    fontWeight: '600',
   },
-  profileRight: {
+  lookingForSection: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 16,
-    flex: 1,
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
   },
-  lookingForContent: {
-    alignItems: 'flex-end',
+  lookingForInfo: {
+    flex: 1,
+    marginRight: 16,
   },
   profileIconContainer: {
     position: 'relative',

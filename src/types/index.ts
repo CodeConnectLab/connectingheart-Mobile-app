@@ -26,3 +26,17 @@ export interface Stats {
 
 export type ThemeMode = 'light' | 'dark';
 
+export interface SearchFormData {
+  profileId: string;
+  country: string;
+  religion: string;
+  motherTongue: string;
+  maritalStatus: string;
+  minAge: string;
+  maxAge: string;
+  minHeight: string;
+  maxHeight: string;
+  minIncome: string;
+  maxIncome: string;
+}
+
