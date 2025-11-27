@@ -1,8 +1,11 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import { useTheme } from '../hooks/useTheme';
 import { Profile } from '../types';
+import { RootStackParamList } from '../navigation/RootNavigator';
 
 interface ProfileGridCardProps {
   profile: Profile;
@@ -18,6 +21,7 @@ export const ProfileGridCard: React.FC<ProfileGridCardProps> = ({
   onIgnore,
 }) => {
   const { theme } = useTheme();
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   const formatProfileDetails = () => {
     const age = profile.age || 'N/A';
@@ -26,8 +30,14 @@ export const ProfileGridCard: React.FC<ProfileGridCardProps> = ({
     return `${age} yrs | ${height} | ${salary}`;
   };
 
+  const handleCardPress = () => {
+    navigation.navigate('ProfileDetail', { profile });
+  };
+
   return (
-    <View
+    <TouchableOpacity
+      activeOpacity={0.9}
+      onPress={handleCardPress}
       style={[
         styles.card,
         {
@@ -108,7 +118,7 @@ export const ProfileGridCard: React.FC<ProfileGridCardProps> = ({
           </Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
