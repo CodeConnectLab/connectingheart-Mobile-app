@@ -3,7 +3,7 @@
 export const lightColors = {
   primary: '#ec4899',
   secondary: '#db2777',
-  background: '#ffffff',
+  background: '#f8fafc',
   surface: '#f8fafc',
   text: '#0f172a',
   textSecondary: '#64748b',

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import {
   View,
   Text,
@@ -6,238 +6,209 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
-  SafeAreaView,
-  Dimensions,
+  Modal,
 } from 'react-native';
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { LinearGradient } from 'expo-linear-gradient';
+import { RouteProp, useRoute } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../hooks/useTheme';
 import { RootStackParamList } from '../navigation/RootNavigator';
+import { BasicDetailsTab } from './ProfileDetail/tabs/BasicDetailsTab';
+import { FamilyDetailsTab } from './ProfileDetail/tabs/FamilyDetailsTab';
+import { KundaliTab } from './ProfileDetail/tabs/KundaliTab';
+import { MatchTab } from './ProfileDetail/tabs/MatchTab';
+import { ProfileDetailTabsData } from './ProfileDetail/tabs/types';
+import { Toast } from '../common/components';
 
 type ProfileDetailRouteProp = RouteProp<RootStackParamList, 'ProfileDetail'>;
-type ProfileDetailNavigationProp = StackNavigationProp<RootStackParamList, 'ProfileDetail'>;
-
-const { width } = Dimensions.get('window');
+const tabs = ['Basic Details', 'Family', 'Kundali', 'Match'] as const;
+type ProfileDetailTabKey = (typeof tabs)[number];
 
 export const ProfileDetailScreen: React.FC = () => {
   const { theme } = useTheme();
-  const navigation = useNavigation<ProfileDetailNavigationProp>();
   const route = useRoute<ProfileDetailRouteProp>();
   const { profile } = route.params;
-  
-  const [activeTab, setActiveTab] = useState<'Basic Details' | 'Family' | 'Kundali' | 'Match'>('Basic Details');
+  const [activeTab, setActiveTab] = useState<ProfileDetailTabKey>('Basic Details');
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  
-  // Mock multiple images - in real app, fetch from profile.images array
+  const [isContactModalVisible, setContactModalVisible] = useState(false);
+  const [isIgnored, setIsIgnored] = useState(false);
+  const [isShortlisted, setIsShortlisted] = useState(false);
+  const [toastState, setToastState] = useState({
+    visible: false,
+    message: '',
+    id: 0,
+  });
+
   const profileImages = profile.image 
     ? [profile.image, profile.image, profile.image, profile.image, profile.image, profile.image] // Replace with actual images array
     : [];
 
-  const tabs = ['Basic Details', 'Family', 'Kundali', 'Match'] as const;
+  const profileId = profile.name || `HEARTS-${profile.id}`;
 
-  const handlePreviousImage = () => {
+  const detailData = useMemo<ProfileDetailTabsData>(
+    () => ({
+      basic: {
+        summaryFields: [
+          { label: 'Profile ID:', value: profileId },
+          { label: 'Height:', value: profile.height || `5'3" (1.60 mts)` },
+          { label: 'Location:', value: profile.location || 'Vid_101, Madhya Pradesh, Ind_101' },
+        ],
+        criticalFields: [
+          { label: 'Date of Birth:', value: '1996-06-19' },
+          { label: 'Marital Status:', value: 'Never married' },
+          { label: 'Caste:', value: 'Meena' },
+        ],
+        about:
+          'A cheerful and ambitious professional who values family traditions and modern aspirations equally.',
+        aboutFields: [
+          { label: 'Profile Managed by:', value: 'Self' },
+          { label: 'Body Type:', value: 'Average' },
+          { label: 'Thalassemia:', value: 'No' },
+          { label: 'HIV Positive:', value: 'No' },
+        ],
+        educationFields: [{ label: 'Qualification:', value: 'BSC' }],
+        careerSummary:
+          'Working as a teacher in the private sector with a passion for enabling young minds.',
+        careerFields: [
+          { label: 'Employed In:', value: 'Private Sector' },
+          { label: 'Occupation:', value: 'Teacher' },
+          { label: 'Interested In Settling Abroad:', value: 'Yes' },
+          { label: 'Income:', value: 'Rs. 3 - 4 Lakh' },
+        ],
+      },
+      family: {
+        fields: [
+          { label: 'Family Status:', value: 'Middle Class' },
+          { label: 'Family Type:', value: 'Nuclear Family' },
+          { label: 'Family Values:', value: 'Moderate' },
+          { label: 'Family Income:', value: 'Rs. 5 - 7.5 Lakh' },
+          { label: 'Father Occupation:', value: 'Sergeant' },
+          { label: 'Mother Occupation:', value: 'Homemaker' },
+          { label: 'Brothers:', value: '1' },
+          { label: 'Sisters:', value: '2' },
+          { label: 'Married Sisters:', value: '2' },
+          { label: 'My family based out of:', value: 'Ind_101' },
+          { label: 'Gothra:', value: 'Jatwa' },
+        ],
+      },
+      kundali: {
+        astroFields: [
+          { label: 'Rashi:', value: 'Meena' },
+          { label: 'Time of birth:', value: '12:35 pm' },
+          { label: 'Manglik:', value: 'Non-Manglik' },
+          { label: 'Horoscopes:', value: 'SC' },
+        ],
+        lifestyleFields: [
+          { label: 'Dietary Habits:', value: 'Non-vegetarian' },
+          { label: 'Drinking Habits:', value: 'No' },
+          { label: 'Smoking Habits:', value: 'No' },
+          { label: 'Language:', value: 'English, Hindi' },
+          { label: 'Hobbies:', value: 'Art/Handicraft, Cooking' },
+          { label: 'Interest:', value: 'Movies' },
+        ],
+      },
+      match: {
+        percentage: 100,
+        factors: [
+          { label: 'Age', value: '(06/07/1994)' },
+          { label: 'Marital status', value: '(Never married)' },
+          { label: 'Religion', value: '(Hindu)' },
+          { label: 'Mother tongue', value: '(Hindi)' },
+          { label: 'Manglik', value: '(Non-Manglik)' },
+          { label: 'Height', value: `(${profile.height || `5'5" (1.65 mts)`})` },
+          { label: 'Income', value: '(Rs. 4 - 5 Lakh)' },
+        ],
+      },
+    }),
+    [profile.height, profile.location, profileId]
+  );
+
+  const tabComponents = useMemo<Record<ProfileDetailTabKey, React.ReactNode>>(
+    () => ({
+      'Basic Details': <BasicDetailsTab data={detailData.basic} />,
+      Family: <FamilyDetailsTab data={detailData.family} />,
+      Kundali: <KundaliTab data={detailData.kundali} />,
+      Match: <MatchTab data={detailData.match} />,
+    }),
+    [detailData]
+  );
+
+  const handlePreviousImage = useCallback(() => {
     if (profileImages.length > 0) {
       setCurrentImageIndex((prev) => 
         prev === 0 ? profileImages.length - 1 : prev - 1
       );
     }
-  };
+  }, [profileImages.length]);
 
-  const handleNextImage = () => {
+  const handleNextImage = useCallback(() => {
     if (profileImages.length > 0) {
       setCurrentImageIndex((prev) => 
         prev === profileImages.length - 1 ? 0 : prev + 1
       );
     }
-  };
+  }, [profileImages.length]);
 
-  const handleImageDotPress = (index: number) => {
+  const handleImageDotPress = useCallback((index: number) => {
     setCurrentImageIndex(index);
-  };
+  }, []);
 
-  const renderBasicDetails = () => (
-    <View style={styles.tabContent}>
-      <View style={styles.detailRow}>
-        <Text style={[styles.detailLabel, { color: theme.colors.textSecondary }]}>
-          Profile ID:
-        </Text>
-        <Text style={[styles.detailValue, { color: theme.colors.text }]}>
-          {profile.name || `HEARTS-${profile.id}`}
-        </Text>
-      </View>
-      
-      <View style={styles.detailRow}>
-        <Text style={[styles.detailLabel, { color: theme.colors.textSecondary }]}>
-          Height:
-        </Text>
-        <Text style={[styles.detailValue, { color: theme.colors.text }]}>
-          {profile.height || 'N/A'}
-        </Text>
-      </View>
-      
-      <View style={styles.detailRow}>
-        <Text style={[styles.detailLabel, { color: theme.colors.textSecondary }]}>
-          Location:
-        </Text>
-        <Text style={[styles.detailValue, { color: theme.colors.text }]}>
-          {profile.location || 'N/A'}
-        </Text>
-      </View>
+  const hideToast = useCallback(() => {
+    setToastState((prev) => ({ ...prev, visible: false }));
+  }, []);
 
-      <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: theme.colors.primary }]}>
-          CRITICAL FIELDS
-        </Text>
-        <View style={[styles.criticalField, { backgroundColor: '#fff9e6' }]}>
-          <Text style={[styles.criticalLabel, { color: theme.colors.textSecondary }]}>
-            Date of Birth:
-          </Text>
-          <Text style={[styles.criticalValue, { color: theme.colors.text }]}>
-            2007-10-20
-          </Text>
-        </View>
-      </View>
-    </View>
-  );
+  const showToast = useCallback((message: string) => {
+    setToastState({
+      visible: true,
+      message,
+      id: Date.now(),
+    });
+  }, []);
 
-  const renderFamilyDetails = () => (
-    <View style={styles.tabContent}>
-      <Text style={[styles.familyTitle, { color: theme.colors.primary }]}>
-        Family Details
-      </Text>
-      
-      <View style={styles.familyRow}>
-        <Text style={[styles.familyLabel, { color: theme.colors.text }]}>
-          Family Status:
-        </Text>
-        <Text style={[styles.familyValue, { color: theme.colors.textSecondary }]}>
-          Middle Class
-        </Text>
-      </View>
-      
-      <View style={styles.familyRow}>
-        <Text style={[styles.familyLabel, { color: theme.colors.text }]}>
-          Family Type:
-        </Text>
-        <Text style={[styles.familyValue, { color: theme.colors.textSecondary }]}>
-          Nuclear Family
-        </Text>
-      </View>
-      
-      <View style={styles.familyRow}>
-        <Text style={[styles.familyLabel, { color: theme.colors.text }]}>
-          Family Values:
-        </Text>
-        <Text style={[styles.familyValue, { color: theme.colors.textSecondary }]}>
-          Con
-        </Text>
-      </View>
-      
-      <View style={styles.familyRow}>
-        <Text style={[styles.familyLabel, { color: theme.colors.text }]}>
-          Family Income:
-        </Text>
-        <Text style={[styles.familyValue, { color: theme.colors.textSecondary }]}>
-          Rs. 5 - 6 Lakh
-        </Text>
-      </View>
-      
-      <View style={styles.familyRow}>
-        <Text style={[styles.familyLabel, { color: theme.colors.text }]}>
-          Father Occupation:
-        </Text>
-        <Text style={[styles.familyValue, { color: theme.colors.textSecondary }]}>
-          Ret
-        </Text>
-      </View>
-      
-      <View style={styles.familyRow}>
-        <Text style={[styles.familyLabel, { color: theme.colors.text }]}>
-          Mother Occupation:
-        </Text>
-        <Text style={[styles.familyValue, { color: theme.colors.textSecondary }]}>
-          Hous
-        </Text>
-      </View>
-      
-      <View style={styles.familyRow}>
-        <Text style={[styles.familyLabel, { color: theme.colors.text }]}>
-          Brothers:
-        </Text>
-        <Text style={[styles.familyValue, { color: theme.colors.textSecondary }]}>
-          1
-        </Text>
-      </View>
-      
-      <View style={styles.familyRow}>
-        <Text style={[styles.familyLabel, { color: theme.colors.text }]}>
-          Sisters:
-        </Text>
-        <Text style={[styles.familyValue, { color: theme.colors.textSecondary }]}>
-          5
-        </Text>
-      </View>
-      
-      <View style={styles.familyRow}>
-        <Text style={[styles.familyLabel, { color: theme.colors.text }]}>
-          Married Sisters:
-        </Text>
-        <Text style={[styles.familyValue, { color: theme.colors.textSecondary }]}>
-          2
-        </Text>
-      </View>
-      
-      <View style={styles.familyRow}>
-        <Text style={[styles.familyLabel, { color: theme.colors.text }]}>
-          My family based out of:
-        </Text>
-        <Text style={[styles.familyValue, { color: theme.colors.textSecondary }]}>
-          Ind_101
-        </Text>
-      </View>
-      
-      <View style={styles.familyRow}>
-        <Text style={[styles.familyLabel, { color: theme.colors.text }]}>
-          Gothra:
-        </Text>
-        <Text style={[styles.familyValue, { color: theme.colors.textSecondary }]}>
-          Chandwaria
-        </Text>
-      </View>
-    </View>
-  );
+  const handleContactPress = useCallback(() => {
+    setContactModalVisible(true);
+  }, []);
 
-  const renderTabContent = () => {
-    switch (activeTab) {
-      case 'Basic Details':
-        return renderBasicDetails();
-      case 'Family':
-        return renderFamilyDetails();
-      case 'Kundali':
-        return (
-          <View style={styles.tabContent}>
-            <Text style={[styles.tabText, { color: theme.colors.text }]}>
-              Kundali details will be displayed here
-            </Text>
-          </View>
-        );
-      case 'Match':
-        return (
-          <View style={styles.tabContent}>
-            <Text style={[styles.tabText, { color: theme.colors.text }]}>
-              Match compatibility details will be displayed here
-            </Text>
-          </View>
-        );
-    }
-  };
+  const handleContactCancel = useCallback(() => {
+    setContactModalVisible(false);
+  }, []);
+
+  const handleContactConfirm = useCallback(() => {
+    setContactModalVisible(false);
+    showToast('Profile unlocked successfully.');
+  }, [showToast]);
+
+  const handleIgnoreToggle = useCallback(() => {
+    setIsIgnored((prev) => {
+      const next = !prev;
+      showToast(
+        next ? 'User ignored successfully.' : 'User restored successfully.'
+      );
+      return next;
+    });
+  }, [showToast]);
+
+  const handleShortlistToggle = useCallback(() => {
+    setIsShortlisted((prev) => {
+      const next = !prev;
+      showToast(
+        next
+          ? 'Profile shortlisted successfully.'
+          : 'Profile unshortlisted successfully.'
+      );
+      return next;
+    });
+  }, [showToast]);
+
+  const handleChatPress = useCallback(() => {
+    showToast('Chat coming soon.');
+  }, [showToast]);
+
+  const handleSendInterest = useCallback(() => {
+    showToast('Interest sent successfully.');
+  }, [showToast]);
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      {/* Gradient Header */}
-
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
@@ -329,9 +300,7 @@ export const ProfileDetailScreen: React.FC = () => {
         </View>
 
         {/* Tab Content */}
-        <View style={[styles.contentCard, { backgroundColor: theme.colors.cardBackground, borderColor: theme.colors.border }]}>
-          {renderTabContent()}
-        </View>
+        <View style={styles.tabContainer}>{tabComponents[activeTab]}</View>
       </ScrollView>
 
       {/* Bottom Action Bar */}
@@ -347,6 +316,7 @@ export const ProfileDetailScreen: React.FC = () => {
         <TouchableOpacity
           style={[styles.actionButton, styles.sendInterestButton, { backgroundColor: theme.colors.primary }]}
           activeOpacity={0.8}
+          onPress={handleSendInterest}
         >
           <Ionicons name="paper-plane" size={20} color="white" />
           <Text style={styles.sendInterestText}>Send Interest</Text>
@@ -355,6 +325,7 @@ export const ProfileDetailScreen: React.FC = () => {
         <TouchableOpacity
           style={[styles.actionButton, styles.secondaryActionButton]}
           activeOpacity={0.7}
+          onPress={handleContactPress}
         >
           <Ionicons name="call" size={20} color="white" />
           <Text style={styles.secondaryActionText}>Contact</Text>
@@ -363,27 +334,100 @@ export const ProfileDetailScreen: React.FC = () => {
         <TouchableOpacity
           style={[styles.actionButton, styles.secondaryActionButton]}
           activeOpacity={0.7}
+          onPress={handleShortlistToggle}
         >
           <Ionicons name="person-add" size={20} color="white" />
-          <Text style={styles.secondaryActionText}>Shortlist</Text>
+          <Text style={styles.secondaryActionText}>
+            {isShortlisted ? 'Unshortlist' : 'Shortlist'}
+          </Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={[styles.actionButton, styles.secondaryActionButton]}
           activeOpacity={0.7}
+          onPress={handleIgnoreToggle}
         >
           <Ionicons name="ban" size={20} color="white" />
-          <Text style={styles.secondaryActionText}>Ignore</Text>
+          <Text style={styles.secondaryActionText}>
+            {isIgnored ? 'Undo Ignore' : 'Ignore'}
+          </Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={[styles.actionButton, styles.secondaryActionButton]}
           activeOpacity={0.7}
+          onPress={handleChatPress}
         >
           <Ionicons name="chatbubble" size={20} color="white" />
           <Text style={styles.secondaryActionText}>Chat</Text>
         </TouchableOpacity>
       </View>
+
+      <Modal
+        visible={isContactModalVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={handleContactCancel}
+      >
+        <View style={styles.modalOverlay}>
+          <View
+            style={[
+              styles.modalCard,
+              { backgroundColor: theme.colors.surface },
+            ]}
+          >
+            <Text style={[styles.modalTitle, { color: theme.colors.text }]}>
+              Do you want to unlock this profile?
+            </Text>
+            <Text
+              style={[
+                styles.modalSubtitle,
+                { color: theme.colors.textSecondary },
+              ]}
+            >
+              This will cost you 1 heart coin!
+            </Text>
+            <View style={styles.modalActions}>
+              <TouchableOpacity
+                style={[
+                  styles.modalButton,
+                  styles.modalSecondaryButton,
+                  { borderColor: theme.colors.border },
+                ]}
+                onPress={handleContactCancel}
+                activeOpacity={0.8}
+              >
+                <Text
+                  style={[
+                    styles.modalSecondaryText,
+                    { color: theme.colors.text },
+                  ]}
+                >
+                  Cancel
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.modalButton,
+                  styles.modalPrimaryButton,
+                  { backgroundColor: theme.colors.primary },
+                ]}
+                onPress={handleContactConfirm}
+                activeOpacity={0.8}
+              >
+                <Text style={styles.modalPrimaryText}>OK</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      <Toast
+        visible={toastState.visible}
+        message={toastState.message}
+        onHide={hideToast}
+        resetKey={toastState.id}
+      />
     </View>
   );
 };
@@ -393,67 +437,19 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 12,
   },
-  header: {
-    paddingTop: 0,
-  },
-  headerContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    // paddingHorizontal: 16,
-    // paddingVertical: 16,
-  },
-  menuButton: {
-    padding: 8,
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: 'white',
-    flex: 1,
-    textAlign: 'center',
-  },
-  rightIcons: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  iconButton: {
-    padding: 8,
-    position: 'relative',
-  },
-  badge: {
-    position: 'absolute',
-    top: 4,
-    right: 4,
-    backgroundColor: '#10b981',
-    borderRadius: 10,
-    minWidth: 20,
-    height: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 4,
-  },
-  badgeText: {
-    color: 'white',
-    fontSize: 10,
-    fontWeight: '600',
-  },
   scrollView: {
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: 100,
+    paddingBottom: 120,
   },
   imageCarousel: {
     width: '100%',
     height: 400,
     position: 'relative',
-    marginBottom: 0,
     borderRadius: 24,
     overflow: 'hidden',
-    // marginHorizontal: 16,
-    marginTop: 16,
+    marginTop: 8,
   },
   carouselImage: {
     width: '100%',
@@ -528,79 +524,10 @@ const styles = StyleSheet.create({
     height: 2,
     borderRadius: 1,
   },
-  contentCard: {
-    margin: 16,
-    borderRadius: 24,
-    padding: 24,
-    borderWidth: 1,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
-  },
-  tabContent: {
-    gap: 24,
-  },
-  detailRow: {
-    flexDirection: 'row',
-    marginBottom: 12,
-    gap: 8,
-    paddingVertical: 8,
-  },
-  detailLabel: {
-    fontSize: 14,
-    fontWeight: '600',
-    minWidth: 100,
-  },
-  detailValue: {
-    fontSize: 14,
-    flex: 1,
-  },
-  section: {
-    marginTop: 8,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginBottom: 16,
-  },
-  criticalField: {
-    padding: 16,
-    borderRadius: 8,
-    flexDirection: 'row',
-    gap: 8,
-  },
-  criticalLabel: {
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  criticalValue: {
-    fontSize: 14,
-    flex: 1,
-  },
-  familyTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginBottom: 24,
-  },
-  familyRow: {
-    flexDirection: 'row',
-    paddingVertical: 8,
-    gap: 16,
-  },
-  familyLabel: {
-    fontSize: 14,
-    fontWeight: '600',
-    minWidth: 140,
-  },
-  familyValue: {
-    fontSize: 14,
-    flex: 1,
-  },
-  tabText: {
-    fontSize: 16,
-    lineHeight: 24,
+  tabContainer: {
+    marginTop: 24,
+    marginHorizontal: 4,
+    marginBottom: 32,
   },
   bottomActionBar: {
     position: 'absolute',
@@ -649,6 +576,58 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontWeight: '600',
     letterSpacing: 0.5,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.25)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
+  },
+  modalCard: {
+    width: '100%',
+    borderRadius: 24,
+    padding: 24,
+    shadowColor: '#000',
+    shadowOpacity: 0.15,
+    shadowRadius: 20,
+    shadowOffset: { width: 0, height: 10 },
+    elevation: 10,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  modalSubtitle: {
+    fontSize: 14,
+    textAlign: 'center',
+    marginBottom: 24,
+  },
+  modalActions: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  modalButton: {
+    flex: 1,
+    paddingVertical: 12,
+    borderRadius: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalSecondaryButton: {
+    borderWidth: 1,
+    backgroundColor: 'transparent',
+  },
+  modalPrimaryButton: {},
+  modalPrimaryText: {
+    color: 'white',
+    fontWeight: '700',
+    letterSpacing: 0.5,
+  },
+  modalSecondaryText: {
+    fontWeight: '600',
   },
 });
 
