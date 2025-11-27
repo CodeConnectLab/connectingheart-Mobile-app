@@ -11,6 +11,7 @@ import { TheyDeclinedScreen } from '../screens/TheyDeclinedScreen';
 import { ShortlistedProfilesScreen } from '../screens/ShortlistedProfilesScreen';
 import { IgnoredProfilesScreen } from '../screens/IgnoredProfilesScreen';
 import { BlockedProfilesScreen } from '../screens/BlockedProfilesScreen';
+import { EditProfileScreen } from '../screens/EditProfileScreen';
 import { Profile } from '../types';
 
 export type RootStackParamList = {
@@ -25,6 +26,7 @@ export type RootStackParamList = {
   ShortlistedProfiles: undefined;
   IgnoredProfiles: undefined;
   BlockedProfiles: undefined;
+  EditProfile: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -48,6 +50,7 @@ export const RootNavigator: React.FC = () => {
       <Stack.Screen name="ShortlistedProfiles" component={ShortlistedProfilesScreen} />
       <Stack.Screen name="IgnoredProfiles" component={IgnoredProfilesScreen} />
       <Stack.Screen name="BlockedProfiles" component={BlockedProfilesScreen} />
+      <Stack.Screen name="EditProfile" component={EditProfileScreen} />
     </Stack.Navigator>
   );
 };

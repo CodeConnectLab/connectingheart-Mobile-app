@@ -13,4 +13,5 @@ export { TheyDeclinedScreen } from './TheyDeclinedScreen';
 export { ShortlistedProfilesScreen } from './ShortlistedProfilesScreen';
 export { IgnoredProfilesScreen } from './IgnoredProfilesScreen';
 export { BlockedProfilesScreen } from './BlockedProfilesScreen';
+export { EditProfileScreen } from './EditProfileScreen';
 

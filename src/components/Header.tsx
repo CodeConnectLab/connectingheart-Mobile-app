@@ -4,9 +4,11 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../hooks/useTheme';
 import { CommonActions } from '@react-navigation/native';
 import { navigationRef } from '../navigation';
+import { useSidebar } from '../contexts/SidebarContext';
 
 export const Header: React.FC = () => {
   const { theme } = useTheme();
+  const { openSidebar } = useSidebar();
 
   const handleSearchPress = () => {
     if (navigationRef.current?.isReady()) {
@@ -33,7 +35,7 @@ export const Header: React.FC = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.gradient.start }]}>
-      <TouchableOpacity style={styles.menuButton}>
+      <TouchableOpacity style={styles.menuButton} onPress={openSidebar}>
         <Ionicons name="menu" size={28} color="white" />
       </TouchableOpacity>
 
