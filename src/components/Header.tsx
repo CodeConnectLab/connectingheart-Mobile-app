@@ -2,9 +2,34 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../hooks/useTheme';
+import { CommonActions } from '@react-navigation/native';
+import { navigationRef } from '../navigation';
 
 export const Header: React.FC = () => {
   const { theme } = useTheme();
+
+  const handleSearchPress = () => {
+    if (navigationRef.current?.isReady()) {
+      navigationRef.current.dispatch(
+        CommonActions.navigate({
+          name: 'MainTabs',
+          params: {
+            screen: 'Search',
+          },
+        })
+      );
+    }
+  };
+
+  const handleNotificationPress = () => {
+    if (navigationRef.current?.isReady()) {
+      navigationRef.current.dispatch(
+        CommonActions.navigate({
+          name: 'Notifications',
+        })
+      );
+    }
+  };
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.gradient.start }]}>
@@ -15,10 +40,16 @@ export const Header: React.FC = () => {
       <Text style={styles.title}>Connecting Hearts</Text>
 
       <View style={styles.rightIcons}>
-        <TouchableOpacity style={styles.iconButton}>
+        <TouchableOpacity
+          style={styles.iconButton}
+          onPress={handleSearchPress}
+        >
           <Ionicons name="search" size={24} color="white" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.iconButton}>
+        <TouchableOpacity
+          style={styles.iconButton}
+          onPress={handleNotificationPress}
+        >
           <Ionicons name="notifications" size={24} color="white" />
           <View style={styles.badge}>
             <Text style={styles.badgeText}>9+</Text>

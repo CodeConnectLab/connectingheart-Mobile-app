@@ -4,4 +4,13 @@ export { DailyPicksScreen } from './DailyPicksScreen';
 export { ProfilesScreen } from './ProfilesScreen';
 export { MembershipScreen } from './MembershipScreen';
 export { ProfileDetailScreen } from './ProfileDetailScreen';
+export { NotificationsScreen } from './NotificationsScreen';
+export { InterestsReceivedScreen } from './InterestsReceivedScreen';
+export { InterestsSentScreen } from './InterestsSentScreen';
+export { UnlockedProfilesScreen } from './UnlockedProfilesScreen';
+export { IDeclinedScreen } from './IDeclinedScreen';
+export { TheyDeclinedScreen } from './TheyDeclinedScreen';
+export { ShortlistedProfilesScreen } from './ShortlistedProfilesScreen';
+export { IgnoredProfilesScreen } from './IgnoredProfilesScreen';
+export { BlockedProfilesScreen } from './BlockedProfilesScreen';
 

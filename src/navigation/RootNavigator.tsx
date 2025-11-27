@@ -2,11 +2,29 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { BottomTabNavigator } from './BottomTabNavigator';
 import { ProfileDetailScreen } from '../screens/ProfileDetailScreen';
+import { NotificationsScreen } from '../screens/NotificationsScreen';
+import { InterestsReceivedScreen } from '../screens/InterestsReceivedScreen';
+import { InterestsSentScreen } from '../screens/InterestsSentScreen';
+import { UnlockedProfilesScreen } from '../screens/UnlockedProfilesScreen';
+import { IDeclinedScreen } from '../screens/IDeclinedScreen';
+import { TheyDeclinedScreen } from '../screens/TheyDeclinedScreen';
+import { ShortlistedProfilesScreen } from '../screens/ShortlistedProfilesScreen';
+import { IgnoredProfilesScreen } from '../screens/IgnoredProfilesScreen';
+import { BlockedProfilesScreen } from '../screens/BlockedProfilesScreen';
 import { Profile } from '../types';
 
 export type RootStackParamList = {
   MainTabs: undefined;
   ProfileDetail: { profile: Profile };
+  Notifications: undefined;
+  InterestsReceived: undefined;
+  InterestsSent: undefined;
+  UnlockedProfiles: undefined;
+  IDeclined: undefined;
+  TheyDeclined: undefined;
+  ShortlistedProfiles: undefined;
+  IgnoredProfiles: undefined;
+  BlockedProfiles: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -17,11 +35,19 @@ export const RootNavigator: React.FC = () => {
       screenOptions={{
         headerShown: false,
         presentation: 'card',
-        animationEnabled: true,
       }}
     >
       <Stack.Screen name="MainTabs" component={BottomTabNavigator} />
       <Stack.Screen name="ProfileDetail" component={ProfileDetailScreen} />
+      <Stack.Screen name="Notifications" component={NotificationsScreen} />
+      <Stack.Screen name="InterestsReceived" component={InterestsReceivedScreen} />
+      <Stack.Screen name="InterestsSent" component={InterestsSentScreen} />
+      <Stack.Screen name="UnlockedProfiles" component={UnlockedProfilesScreen} />
+      <Stack.Screen name="IDeclined" component={IDeclinedScreen} />
+      <Stack.Screen name="TheyDeclined" component={TheyDeclinedScreen} />
+      <Stack.Screen name="ShortlistedProfiles" component={ShortlistedProfilesScreen} />
+      <Stack.Screen name="IgnoredProfiles" component={IgnoredProfilesScreen} />
+      <Stack.Screen name="BlockedProfiles" component={BlockedProfilesScreen} />
     </Stack.Navigator>
   );
 };
