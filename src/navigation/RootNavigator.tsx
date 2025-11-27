@@ -12,6 +12,8 @@ import { ShortlistedProfilesScreen } from '../screens/ShortlistedProfilesScreen'
 import { IgnoredProfilesScreen } from '../screens/IgnoredProfilesScreen';
 import { BlockedProfilesScreen } from '../screens/BlockedProfilesScreen';
 import { EditProfileScreen } from '../screens/EditProfileScreen';
+import { ChangePasswordScreen } from '../screens/ChangePasswordScreen';
+import { DeleteProfileScreen } from '../screens/DeleteProfileScreen';
 import { Profile } from '../types';
 
 export type RootStackParamList = {
@@ -27,6 +29,8 @@ export type RootStackParamList = {
   IgnoredProfiles: undefined;
   BlockedProfiles: undefined;
   EditProfile: undefined;
+  ChangePassword: undefined;
+  DeleteProfile: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -51,6 +55,8 @@ export const RootNavigator: React.FC = () => {
       <Stack.Screen name="IgnoredProfiles" component={IgnoredProfilesScreen} />
       <Stack.Screen name="BlockedProfiles" component={BlockedProfilesScreen} />
       <Stack.Screen name="EditProfile" component={EditProfileScreen} />
+      <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
+      <Stack.Screen name="DeleteProfile" component={DeleteProfileScreen} />
     </Stack.Navigator>
   );
 };

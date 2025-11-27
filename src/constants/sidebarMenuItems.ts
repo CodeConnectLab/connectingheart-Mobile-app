@@ -65,13 +65,13 @@ export const SIDEBAR_MENU_ITEMS: MenuItem[] = [
     id: 'change-password',
     label: 'Change Password',
     icon: 'lock-closed',
-    route: { name: 'MainTabs', params: { screen: 'Dashboard' } }, // Update with actual route
+    route: { name: 'ChangePassword' },
   },
   {
     id: 'delete-profile',
     label: 'Delete Profile',
     icon: 'trash',
-    route: { name: 'MainTabs', params: { screen: 'Dashboard' } }, // Update with actual route
+    route: { name: 'DeleteProfile' },
   },
   {
     id: 'feedback',
