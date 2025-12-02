@@ -18,6 +18,8 @@ import { FeedbackScreen } from '../screens/FeedbackScreen';
 import { HelpCenterScreen } from '../screens/HelpCenterScreen';
 import { TermsScreen } from '../screens/TermsScreen';
 import { PrivacyPolicyScreen } from '../screens/PrivacyPolicyScreen';
+import { LoginScreen } from '../screens/LoginScreen';
+import { RegisterScreen } from '../screens/RegisterScreen';
 import { Profile } from '../types';
 
 export type RootStackParamList = {
@@ -40,6 +42,7 @@ export type RootStackParamList = {
   Terms: undefined;
   PrivacyPolicy: undefined;
   Login: undefined;
+  Register: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -70,6 +73,8 @@ export const RootNavigator: React.FC = () => {
       <Stack.Screen name="HelpCenter" component={HelpCenterScreen} />
       <Stack.Screen name="Terms" component={TermsScreen} />
       <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicyScreen} />
+      <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Screen name="Register" component={RegisterScreen} />
     </Stack.Navigator>
   );
 };

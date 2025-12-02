@@ -20,4 +20,6 @@ export { FeedbackScreen } from './FeedbackScreen';
 export { HelpCenterScreen } from './HelpCenterScreen';
 export { TermsScreen } from './TermsScreen';
 export { PrivacyPolicyScreen } from './PrivacyPolicyScreen';
+export { LoginScreen } from './LoginScreen';
+export { RegisterScreen } from './RegisterScreen';
 
