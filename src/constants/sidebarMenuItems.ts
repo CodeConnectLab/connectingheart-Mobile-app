@@ -1,4 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
+import { CommonActions } from '@react-navigation/native';
+import { navigationRef } from '../navigation';
 
 export interface MenuItem {
   id: string;
@@ -77,25 +79,25 @@ export const SIDEBAR_MENU_ITEMS: MenuItem[] = [
     id: 'feedback',
     label: 'Feedback',
     icon: 'chatbubble',
-    route: { name: 'MainTabs', params: { screen: 'Dashboard' } }, // Update with actual route
+    route: { name: 'Feedback' },
   },
   {
     id: 'help-center',
     label: 'Help Center',
     icon: 'help-circle',
-    route: { name: 'MainTabs', params: { screen: 'Dashboard' } }, // Update with actual route
+    route: { name: 'HelpCenter' },
   },
   {
     id: 'terms',
     label: 'Terms & Conditions',
     icon: 'document-text',
-    route: { name: 'MainTabs', params: { screen: 'Dashboard' } }, // Update with actual route
+    route: { name: 'Terms' },
   },
   {
     id: 'privacy',
     label: 'Privacy Policy',
     icon: 'shield-checkmark',
-    route: { name: 'MainTabs', params: { screen: 'Dashboard' } }, // Update with actual route
+    route: { name: 'PrivacyPolicy' },
   },
   {
     id: 'donate',
@@ -110,8 +112,15 @@ export const SIDEBAR_MENU_ITEMS: MenuItem[] = [
     icon: 'log-out',
     isDanger: true,
     action: () => {
-      // Handle logout logic
-      console.log('Logout clicked');
+      // Navigate to login screen
+      if (navigationRef.current?.isReady()) {
+        navigationRef.current.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{ name: 'Login' as never }],
+          })
+        );
+      }
     },
   },
 ];

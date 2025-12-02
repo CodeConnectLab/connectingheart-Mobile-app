@@ -11,7 +11,7 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../hooks/useTheme';
-import { ProfileCard, StatCard } from '../components';
+import { ProfileCard, StatCard, ImageCarousel } from '../components';
 import { Profile } from '../types';
 
 // Mock data
@@ -84,6 +84,13 @@ const mockAllProfiles: Profile[] = [
 export const DashboardScreen: React.FC = () => {
   const { theme } = useTheme();
   const scrollRef = useRef<ScrollView>(null);
+
+  // Mock carousel images - replace with actual images
+  const carouselImages = [
+    'https://backend.prod.connectingheart.co/api/profile/file/65eaccb3c70ef94111173de2/1756985740464',
+    'https://backend.prod.connectingheart.co/api/profile/file/67af5348c70ef94111d50b2a/1753377883393',
+    'https://backend.prod.connectingheart.co/api/profile/file/66ed5972c70ef941113f148f/1728015850056',
+  ];
 
   const handleProfilePress = (profile: Profile) => {
     console.log('Profile pressed:', profile.id);
@@ -180,6 +187,14 @@ export const DashboardScreen: React.FC = () => {
           </View>
         </View>
       </LinearGradient>
+
+      {/* Image Carousel Section */}
+      <ImageCarousel
+        images={carouselImages}
+        label=""
+        heading=""
+        height={220}
+      />
 
       {/* Stats Cards */}
       <View style={styles.statsContainer}>

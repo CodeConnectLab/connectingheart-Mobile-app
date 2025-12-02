@@ -16,4 +16,8 @@ export { BlockedProfilesScreen } from './BlockedProfilesScreen';
 export { EditProfileScreen } from './EditProfileScreen';
 export { ChangePasswordScreen } from './ChangePasswordScreen';
 export { DeleteProfileScreen } from './DeleteProfileScreen';
+export { FeedbackScreen } from './FeedbackScreen';
+export { HelpCenterScreen } from './HelpCenterScreen';
+export { TermsScreen } from './TermsScreen';
+export { PrivacyPolicyScreen } from './PrivacyPolicyScreen';
 

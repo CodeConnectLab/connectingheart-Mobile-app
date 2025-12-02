@@ -14,6 +14,10 @@ import { BlockedProfilesScreen } from '../screens/BlockedProfilesScreen';
 import { EditProfileScreen } from '../screens/EditProfileScreen';
 import { ChangePasswordScreen } from '../screens/ChangePasswordScreen';
 import { DeleteProfileScreen } from '../screens/DeleteProfileScreen';
+import { FeedbackScreen } from '../screens/FeedbackScreen';
+import { HelpCenterScreen } from '../screens/HelpCenterScreen';
+import { TermsScreen } from '../screens/TermsScreen';
+import { PrivacyPolicyScreen } from '../screens/PrivacyPolicyScreen';
 import { Profile } from '../types';
 
 export type RootStackParamList = {
@@ -31,6 +35,11 @@ export type RootStackParamList = {
   EditProfile: undefined;
   ChangePassword: undefined;
   DeleteProfile: undefined;
+  Feedback: undefined;
+  HelpCenter: undefined;
+  Terms: undefined;
+  PrivacyPolicy: undefined;
+  Login: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -57,6 +66,10 @@ export const RootNavigator: React.FC = () => {
       <Stack.Screen name="EditProfile" component={EditProfileScreen} />
       <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
       <Stack.Screen name="DeleteProfile" component={DeleteProfileScreen} />
+      <Stack.Screen name="Feedback" component={FeedbackScreen} />
+      <Stack.Screen name="HelpCenter" component={HelpCenterScreen} />
+      <Stack.Screen name="Terms" component={TermsScreen} />
+      <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicyScreen} />
     </Stack.Navigator>
   );
 };
