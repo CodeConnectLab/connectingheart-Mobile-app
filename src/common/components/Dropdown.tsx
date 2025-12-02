@@ -18,6 +18,7 @@ export interface DropdownProps {
   value: string;
   onSelect: (value: string) => void;
   testID?: string;
+  disabled?: boolean;
 }
 
 /**
@@ -41,6 +42,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
   value,
   onSelect,
   testID,
+  disabled = false,
 }) => {
   const { theme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
@@ -56,17 +58,23 @@ export const Dropdown: React.FC<DropdownProps> = ({
           styles.dropdownButton,
           {
             borderColor: theme.colors.border,
-            backgroundColor: theme.colors.cardBackground,
+            backgroundColor: disabled
+              ? theme.colors.surface
+              : theme.colors.cardBackground,
+            opacity: disabled ? 0.6 : 1,
           },
         ]}
-        onPress={() => setIsOpen(true)}
-        activeOpacity={0.7}
+        onPress={() => !disabled && setIsOpen(true)}
+        activeOpacity={disabled ? 1 : 0.7}
+        disabled={disabled}
       >
         <Text
           style={[
             styles.dropdownText,
             {
-              color: selectedOption
+              color: disabled
+                ? theme.colors.textSecondary
+                : selectedOption
                 ? theme.colors.text
                 : theme.colors.textSecondary,
             },

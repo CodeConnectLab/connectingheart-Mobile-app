@@ -97,22 +97,23 @@ export const Sidebar: React.FC = () => {
             },
           ]}
         >
-          <ScrollView
-            style={styles.scrollView}
-            contentContainerStyle={styles.scrollContent}
-            showsVerticalScrollIndicator={false}
-          >
-            {/* Close Button */}
-            <TouchableOpacity
-              style={styles.closeButton}
-              onPress={closeSidebar}
-              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          <View style={styles.sidebarContent}>
+            <ScrollView
+              style={styles.scrollView}
+              contentContainerStyle={styles.scrollContent}
+              showsVerticalScrollIndicator={false}
+              bounces={false}
             >
-              <Ionicons name="close" size={24} color="white" />
-            </TouchableOpacity>
-
-            {/* User Profile Section */}
-            <View style={styles.profileSection}>
+              {/* User Profile Section */}
+              <View style={styles.profileSection}>
+                {/* Close Button */}
+                <TouchableOpacity
+                  style={styles.closeButton}
+                  onPress={closeSidebar}
+                  hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                >
+                  <Ionicons name="close" size={18} color="white" />
+                </TouchableOpacity>
               <Image
                 source={{ uri: userProfile.image }}
                 style={styles.profileImage}
@@ -141,13 +142,14 @@ export const Sidebar: React.FC = () => {
 
             {/* Menu Items */}
             <View style={styles.menuItemsContainer}>
-              {menuItems.map((item) => (
+              {menuItems.map((item, index) => (
                 <TouchableOpacity
                   key={item.id}
                   style={[
                     styles.menuItem,
                     item.isActive && styles.menuItemActive,
                     item.isDanger && styles.menuItemDanger,
+                    index === menuItems.length - 1 && styles.menuItemLast,
                   ]}
                   onPress={() => handleNavigation(item)}
                   activeOpacity={0.7}
@@ -182,7 +184,8 @@ export const Sidebar: React.FC = () => {
                 </TouchableOpacity>
               ))}
             </View>
-          </ScrollView>
+            </ScrollView>
+          </View>
         </Animated.View>
       </View>
     </Modal>
@@ -205,29 +208,37 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 0,
     top: 0,
+    bottom: 0,
     width: SIDEBAR_WIDTH,
-    height: '100%',
-    padding: 24,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.5,
     shadowRadius: 20,
     elevation: 10,
   },
+  sidebarContent: {
+    flex: 1,
+    backgroundColor: '#0f172a',
+  },
   scrollView: {
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: 24,
+    paddingTop: 24,
+    paddingHorizontal: 24,
+    paddingBottom: 0,
   },
   closeButton: {
     position: 'absolute',
-    right: 16,
-    top: 16,
+    right: 8,
+    top: 8,
     zIndex: 10,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    borderRadius: 8,
-    padding: 8,
+    backgroundColor: 'rgba(51, 65, 85, 0.95)', // slate-700 with opacity
+    borderRadius: 16,
+    width: 28,
+    height: 28,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   profileSection: {
     flexDirection: 'row',
@@ -237,7 +248,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 16,
     marginBottom: 24,
-    marginTop: 40,
+    marginTop: 0,
+    position: 'relative',
   },
   profileImage: {
     width: 64,
@@ -287,13 +299,15 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderRadius: 8,
-    marginBottom: 4,
   },
   menuItemActive: {
     backgroundColor: 'rgba(236, 72, 153, 0.2)', // pink-500/20
   },
   menuItemDanger: {
     // Will be handled by text color
+  },
+  menuItemLast: {
+    marginBottom: 0,
   },
   menuItemContent: {
     flexDirection: 'row',

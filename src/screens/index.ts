@@ -22,4 +22,5 @@ export { TermsScreen } from './TermsScreen';
 export { PrivacyPolicyScreen } from './PrivacyPolicyScreen';
 export { LoginScreen } from './LoginScreen';
 export { RegisterScreen } from './RegisterScreen';
+export { OnboardingScreen } from './OnboardingScreen';
 

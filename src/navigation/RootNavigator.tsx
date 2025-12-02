@@ -20,6 +20,7 @@ import { TermsScreen } from '../screens/TermsScreen';
 import { PrivacyPolicyScreen } from '../screens/PrivacyPolicyScreen';
 import { LoginScreen } from '../screens/LoginScreen';
 import { RegisterScreen } from '../screens/RegisterScreen';
+import { OnboardingScreen } from '../screens/OnboardingScreen';
 import { Profile } from '../types';
 
 export type RootStackParamList = {
@@ -43,6 +44,7 @@ export type RootStackParamList = {
   PrivacyPolicy: undefined;
   Login: undefined;
   Register: undefined;
+  Onboarding: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -75,6 +77,7 @@ export const RootNavigator: React.FC = () => {
       <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicyScreen} />
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="Register" component={RegisterScreen} />
+      <Stack.Screen name="Onboarding" component={OnboardingScreen} />
     </Stack.Navigator>
   );
 };
