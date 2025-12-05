@@ -104,16 +104,7 @@ export const OnboardingScreen: React.FC = () => {
 
   const handleNext = () => {
     // TODO: Validate form and save data
-    // TODO: Navigate to next step or complete onboarding
-    console.log('Form data:', {
-      gender,
-      dateOfBirth,
-      height,
-      country,
-      state,
-      city,
-      residentialStatus,
-    });
+    navigation.navigate('OnboardingStep2');
   };
 
   const handleBack = () => {
@@ -121,14 +112,15 @@ export const OnboardingScreen: React.FC = () => {
   };
 
   return (
-    <KeyboardAvoidingView
+    <ScrollView
       style={[styles.container, { backgroundColor: theme.colors.background }]}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      contentContainerStyle={styles.scrollContent}
+      showsVerticalScrollIndicator={false}
+      keyboardShouldPersistTaps="handled"
     >
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled"
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.keyboardView}
       >
         <View style={styles.content}>
           {/* Progress Bar */}
@@ -144,19 +136,6 @@ export const OnboardingScreen: React.FC = () => {
             />
           </View>
 
-          {/* Header Section */}
-          <View style={styles.headerSection}>
-            <Text style={[styles.stepIndicator, { color: theme.colors.primary }]}>
-              STEP {currentStep} OF {totalSteps}
-            </Text>
-            <Text style={[styles.title, { color: theme.colors.text }]}>
-              Fill in your Personal Details
-            </Text>
-            <Text style={[styles.subtitle, { color: theme.colors.textSecondary }]}>
-              Provide additional information like your Date of Birth, Height and Location.
-            </Text>
-          </View>
-
           {/* Form Section */}
           <View
             style={[
@@ -170,13 +149,15 @@ export const OnboardingScreen: React.FC = () => {
             ]}
           >
             <Text style={[styles.sectionLabel, { color: theme.colors.textSecondary }]}>
-              BASICS
+              PERSONAL DETAILS
             </Text>
 
             <View style={styles.formContent}>
               {/* Gender Selection */}
-              <View style={styles.genderContainer}>
-                <Text style={[styles.label, { color: theme.colors.text }]}>Gender</Text>
+              <View style={styles.fieldGroup}>
+                <Text style={[styles.label, { color: theme.colors.text }]}>
+                  Gender <Text style={styles.required}>*</Text>
+                </Text>
                 <View style={styles.genderButtons}>
                   <TouchableOpacity
                     style={[
@@ -194,6 +175,12 @@ export const OnboardingScreen: React.FC = () => {
                     onPress={() => setGender('male')}
                     activeOpacity={0.7}
                   >
+                    <Ionicons
+                      name="male"
+                      size={18}
+                      color={gender === 'male' ? theme.colors.primary : theme.colors.textSecondary}
+                      style={styles.genderIcon}
+                    />
                     <Text
                       style={[
                         styles.genderButtonText,
@@ -222,6 +209,12 @@ export const OnboardingScreen: React.FC = () => {
                     onPress={() => setGender('female')}
                     activeOpacity={0.7}
                   >
+                    <Ionicons
+                      name="female"
+                      size={18}
+                      color={gender === 'female' ? theme.colors.primary : theme.colors.textSecondary}
+                      style={styles.genderIcon}
+                    />
                     <Text
                       style={[
                         styles.genderButtonText,
@@ -238,10 +231,10 @@ export const OnboardingScreen: React.FC = () => {
               </View>
 
               {/* Date of Birth and Height */}
-              <View style={styles.row}>
-                <View style={[styles.inputContainer, { flex: 1 }]}>
+              <View style={styles.rowGroup}>
+                <View style={styles.fieldGroup}>
                   <Text style={[styles.label, { color: theme.colors.text }]}>
-                    Date of Birth
+                    Date of Birth <Text style={styles.required}>*</Text>
                   </Text>
                   <View style={styles.dateInputWrapper}>
                     <TextInput
@@ -269,8 +262,10 @@ export const OnboardingScreen: React.FC = () => {
                   </View>
                 </View>
 
-                <View style={[styles.inputContainer, { flex: 1 }]}>
-                  <Text style={[styles.label, { color: theme.colors.text }]}>Height</Text>
+                <View style={styles.fieldGroup}>
+                  <Text style={[styles.label, { color: theme.colors.text }]}>
+                    Height <Text style={styles.required}>*</Text>
+                  </Text>
                   <Dropdown
                     label=""
                     placeholder="Select height"
@@ -281,21 +276,34 @@ export const OnboardingScreen: React.FC = () => {
                 </View>
               </View>
 
-              {/* Location Fields */}
-              <View style={styles.row}>
-                <View style={[styles.inputContainer, { flex: 1 }]}>
-                  <Text style={[styles.label, { color: theme.colors.text }]}>Country</Text>
-                  <Dropdown
-                    label=""
-                    placeholder="Select country"
-                    options={countryOptions}
-                    value={country}
-                    onSelect={setCountry}
-                  />
-                </View>
+              {/* Divider */}
+              <View style={[styles.divider, { backgroundColor: theme.colors.border }]} />
 
-                <View style={[styles.inputContainer, { flex: 1 }]}>
-                  <Text style={[styles.label, { color: theme.colors.text }]}>State</Text>
+              {/* Location Section Header */}
+              <Text style={[styles.subsectionLabel, { color: theme.colors.text }]}>
+                Location Details
+              </Text>
+
+              {/* Country */}
+              <View style={styles.fieldGroup}>
+                <Text style={[styles.label, { color: theme.colors.text }]}>
+                  Country <Text style={styles.required}>*</Text>
+                </Text>
+                <Dropdown
+                  label=""
+                  placeholder="Select country"
+                  options={countryOptions}
+                  value={country}
+                  onSelect={setCountry}
+                />
+              </View>
+
+              {/* State and City */}
+              <View style={styles.rowGroup}>
+                <View style={styles.fieldGroup}>
+                  <Text style={[styles.label, { color: theme.colors.text }]}>
+                    State <Text style={styles.required}>*</Text>
+                  </Text>
                   <Dropdown
                     label=""
                     placeholder="Select state"
@@ -305,11 +313,11 @@ export const OnboardingScreen: React.FC = () => {
                     disabled={!country}
                   />
                 </View>
-              </View>
 
-              <View style={styles.row}>
-                <View style={[styles.inputContainer, { flex: 1 }]}>
-                  <Text style={[styles.label, { color: theme.colors.text }]}>City</Text>
+                <View style={styles.fieldGroup}>
+                  <Text style={[styles.label, { color: theme.colors.text }]}>
+                    City <Text style={styles.required}>*</Text>
+                  </Text>
                   <Dropdown
                     label=""
                     placeholder="Select city"
@@ -319,19 +327,20 @@ export const OnboardingScreen: React.FC = () => {
                     disabled={!state}
                   />
                 </View>
+              </View>
 
-                <View style={[styles.inputContainer, { flex: 1 }]}>
-                  <Text style={[styles.label, { color: theme.colors.text }]}>
-                    Residential Status
-                  </Text>
-                  <Dropdown
-                    label=""
-                    placeholder="Select residential status"
-                    options={residentialStatusOptions}
-                    value={residentialStatus}
-                    onSelect={setResidentialStatus}
-                  />
-                </View>
+              {/* Residential Status */}
+              <View style={styles.fieldGroup}>
+                <Text style={[styles.label, { color: theme.colors.text }]}>
+                  Residential Status <Text style={styles.required}>*</Text>
+                </Text>
+                <Dropdown
+                  label=""
+                  placeholder="Select residential status"
+                  options={residentialStatusOptions}
+                  value={residentialStatus}
+                  onSelect={setResidentialStatus}
+                />
               </View>
             </View>
           </View>
@@ -343,8 +352,14 @@ export const OnboardingScreen: React.FC = () => {
               activeOpacity={0.7}
               style={styles.backButton}
             >
+              <Ionicons
+                name="arrow-back"
+                size={20}
+                color={theme.colors.textSecondary}
+                style={styles.backIcon}
+              />
               <Text style={[styles.backButtonText, { color: theme.colors.textSecondary }]}>
-                ← Back
+                Back
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -358,13 +373,19 @@ export const OnboardingScreen: React.FC = () => {
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
               >
-                <Text style={styles.nextButtonText}>Next</Text>
+                <Text style={styles.nextButtonText}>Continue</Text>
+                <Ionicons
+                  name="arrow-forward"
+                  size={20}
+                  color="white"
+                  style={styles.nextIcon}
+                />
               </LinearGradient>
             </TouchableOpacity>
           </View>
         </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </ScrollView>
   );
 };
 
@@ -374,7 +395,11 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-    padding: 16,
+    paddingVertical: 32,
+    paddingHorizontal: 20,
+  },
+  keyboardView: {
+    flex: 1,
   },
   content: {
     width: '100%',
@@ -383,85 +408,87 @@ const styles = StyleSheet.create({
     gap: 24,
   },
   progressBarContainer: {
-    height: 8,
+    height: 6,
     borderRadius: 999,
     overflow: 'hidden',
+    marginBottom: 8,
   },
   progressBar: {
     height: '100%',
     borderRadius: 999,
   },
-  headerSection: {
-    gap: 8,
-    alignItems: 'center',
-  },
-  stepIndicator: {
-    fontSize: 12,
-    fontWeight: '600',
-    letterSpacing: 2,
-    textTransform: 'uppercase',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: '600',
-    textAlign: 'center',
-  },
-  subtitle: {
-    fontSize: 14,
-    textAlign: 'center',
-    lineHeight: 20,
-  },
   formCard: {
     borderRadius: 24,
     borderWidth: 1,
-    padding: 20,
-    gap: 16,
+    padding: 24,
+    gap: 24,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
   },
   sectionLabel: {
-    fontSize: 12,
-    fontWeight: '600',
-    letterSpacing: 1,
+    fontSize: 13,
+    fontWeight: '700',
+    letterSpacing: 1.5,
     textTransform: 'uppercase',
+    marginBottom: -8,
+  },
+  subsectionLabel: {
+    fontSize: 16,
+    fontWeight: '600',
+    marginTop: 4,
+    marginBottom: -8,
   },
   formContent: {
-    gap: 16,
+    gap: 20,
   },
-  genderContainer: {
-    gap: 12,
+  fieldGroup: {
+    gap: 10,
+  },
+  rowGroup: {
+    flexDirection: 'row',
+    gap: 16,
   },
   genderButtons: {
     flexDirection: 'row',
     gap: 12,
-    flexWrap: 'wrap',
   },
   genderButton: {
-    borderRadius: 999,
-    borderWidth: 1,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-  },
-  genderButtonText: {
-    fontSize: 14,
-    fontWeight: '500',
-  },
-  row: {
+    flex: 1,
     flexDirection: 'row',
-    gap: 16,
-  },
-  inputContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 16,
+    borderWidth: 2,
+    paddingHorizontal: 20,
+    paddingVertical: 14,
     gap: 8,
   },
+  genderIcon: {
+    marginRight: 4,
+  },
+  genderButtonText: {
+    fontSize: 15,
+    fontWeight: '600',
+  },
   label: {
-    fontSize: 14,
-    fontWeight: '500',
+    fontSize: 15,
+    fontWeight: '600',
+    marginBottom: 2,
+  },
+  required: {
+    color: '#ef4444',
+    fontSize: 15,
   },
   input: {
     width: '100%',
     borderRadius: 16,
     borderWidth: 1,
     paddingHorizontal: 16,
-    paddingVertical: 12,
-    fontSize: 14,
+    paddingVertical: 14,
+    fontSize: 15,
   },
   dateInputWrapper: {
     position: 'relative',
@@ -469,24 +496,37 @@ const styles = StyleSheet.create({
   dateIcon: {
     position: 'absolute',
     right: 16,
-    top: 12,
+    top: 14,
+  },
+  divider: {
+    height: 1,
+    marginVertical: 4,
+    opacity: 0.3,
   },
   navigationButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     gap: 16,
+    marginTop: 8,
   },
   backButton: {
-    paddingVertical: 12,
-    paddingHorizontal: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    gap: 6,
+  },
+  backIcon: {
+    marginRight: 2,
   },
   backButtonText: {
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: '600',
   },
   nextButton: {
-    borderRadius: 999,
+    flex: 1,
+    borderRadius: 16,
     overflow: 'hidden',
     shadowColor: '#ec4899',
     shadowOffset: { width: 0, height: 4 },
@@ -495,15 +535,20 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   nextButtonGradient: {
-    paddingVertical: 12,
-    paddingHorizontal: 24,
+    flexDirection: 'row',
+    paddingVertical: 14,
+    paddingHorizontal: 32,
     alignItems: 'center',
     justifyContent: 'center',
+    gap: 8,
+  },
+  nextIcon: {
+    marginLeft: 4,
   },
   nextButtonText: {
     color: 'white',
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: '700',
   },
 });
 

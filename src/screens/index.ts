@@ -23,4 +23,11 @@ export { PrivacyPolicyScreen } from './PrivacyPolicyScreen';
 export { LoginScreen } from './LoginScreen';
 export { RegisterScreen } from './RegisterScreen';
 export { OnboardingScreen } from './OnboardingScreen';
+export { OnboardingStep2Screen } from './OnboardingStep2Screen';
+export { OnboardingStep3Screen } from './OnboardingStep3Screen';
+export { OnboardingStep4Screen } from './OnboardingStep4Screen';
+export { OnboardingStep5Screen } from './OnboardingStep5Screen';
+export { OnboardingStep6Screen } from './OnboardingStep6Screen';
+export { OnboardingStep7Screen } from './OnboardingStep7Screen';
+export { VerificationPendingScreen } from './VerificationPendingScreen';
 

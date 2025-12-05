@@ -21,6 +21,13 @@ import { PrivacyPolicyScreen } from '../screens/PrivacyPolicyScreen';
 import { LoginScreen } from '../screens/LoginScreen';
 import { RegisterScreen } from '../screens/RegisterScreen';
 import { OnboardingScreen } from '../screens/OnboardingScreen';
+import { OnboardingStep2Screen } from '../screens/OnboardingStep2Screen';
+import { OnboardingStep3Screen } from '../screens/OnboardingStep3Screen';
+import { OnboardingStep4Screen } from '../screens/OnboardingStep4Screen';
+import { OnboardingStep5Screen } from '../screens/OnboardingStep5Screen';
+import { OnboardingStep6Screen } from '../screens/OnboardingStep6Screen';
+import { OnboardingStep7Screen } from '../screens/OnboardingStep7Screen';
+import { VerificationPendingScreen } from '../screens/VerificationPendingScreen';
 import { Profile } from '../types';
 
 export type RootStackParamList = {
@@ -45,6 +52,13 @@ export type RootStackParamList = {
   Login: undefined;
   Register: undefined;
   Onboarding: undefined;
+  OnboardingStep2: undefined;
+  OnboardingStep3: undefined;
+  OnboardingStep4: undefined;
+  OnboardingStep5: undefined;
+  OnboardingStep6: undefined;
+  OnboardingStep7: undefined;
+  VerificationPending: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -78,6 +92,13 @@ export const RootNavigator: React.FC = () => {
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="Register" component={RegisterScreen} />
       <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+      <Stack.Screen name="OnboardingStep2" component={OnboardingStep2Screen} />
+      <Stack.Screen name="OnboardingStep3" component={OnboardingStep3Screen} />
+      <Stack.Screen name="OnboardingStep4" component={OnboardingStep4Screen} />
+      <Stack.Screen name="OnboardingStep5" component={OnboardingStep5Screen} />
+      <Stack.Screen name="OnboardingStep6" component={OnboardingStep6Screen} />
+      <Stack.Screen name="OnboardingStep7" component={OnboardingStep7Screen} />
+      <Stack.Screen name="VerificationPending" component={VerificationPendingScreen} />
     </Stack.Navigator>
   );
 };
